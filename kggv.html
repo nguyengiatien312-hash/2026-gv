@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Happy New Year</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background-color: #CE0707;
+            color: white;
+            font-family: 'Times New Roman', sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            touch-action: manipulation; /* Tối ưu chạm trên mobile */
+        }
+
+        /* Tiêu đề */
+        .main-title {
+            position: absolute;
+            top: 10%;
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(2rem, 8vw, 3.5rem);
+            color: #ffff00;
+            text-shadow: 0 0 20px #ffcc00;
+            z-index: 10;
+            pointer-events: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 5%;
+            font-size: 1rem;
+            color: #ffcc00;
+            z-index: 10;
+            animation: blink 1.5s infinite;
+            pointer-events: none;
+        }
+
+      /*Bảng lời chúc*/
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.85);
+            width: 90%;
+            max-width: 450px;
+            padding: 25px;
+            border-radius: 25px;
+            border: 3px solid #ffff00;
+            box-shadow: 0 0 30px #00f2fe;
+            text-align: center;
+            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes zoomIn {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal h2 { font-family: 'Pacifico', cursive; color: #ffff00; margin-top: 0; }
+        .modal p { line-height: 1.6; font-size: 1rem; margin: 10px 0; }
+
+        .btn-close {
+            background: #ff8000;
+            color: black;
+            border: none;
+            padding: 12px 40px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+
+    <div class="main-title"> CHÚC MỪNG NĂM MỚI 2026 </div>
+    <div class="instruction">👉 Chạm vào màn hình (vài lần) 🔥</div>
+
+    <div id="wishModal" class="modal">
+        <h2>Năm mới Bính Ngọ 2026</h2>
+        <p>Nhân dịp năm mới, em xin kính chúc Thầy/Cô và gia đình dồi dào sức khỏe, hạnh phúc và vạn sự như ý.</p>
+        <p>Cảm ơn Thầy/Cô đã luôn kiên nhẫn và truyền cảm hứng cho chúng em trong suốt năm qua</p>
+        <p>Mong Thầy/Cô sẽ luôn giữ vững tâm huyết với nghề, có thật nhiều niềm vui bên bài giảng <br>và gặt hái được nhiều thành công trong sự nghiệp trồng người</p>
+        <p><strong>Chúc Thầy/Cô một năm mới An khang - Thịnh vượng.<br>Thầy cô sẽ mãi là ngọn hải đăng soi sáng con đường tri thức cho chúng em</strong></p>
+        <button class="btn-close" onclick="closeModal(event)">Đóng</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const modal = document.getElementById('wishModal');
+        let clickCount = 0;
+
+        // Hàm bắn pháo hoa TẠI VỊ TRÍ CHẠM
+        function launchFirework(x, y) {
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: {
+                    x: x / window.innerWidth,
+                    y: y / window.innerHeight
+                },
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
+            });
+        }
+
+        // Xử lý khi người dùng chạm/click
+        document.addEventListener('mousedown', (e) => {
+            if (modal.style.display === 'block') return;
+            
+            launchFirework(e.clientX, e.clientY);
+            checkModal();
+        });
+
+        // Hỗ trợ cảm ứng điện thoại
+        document.addEventListener('touchstart', (e) => {
+            if (modal.style.display === 'block') return;
+            
+            const touch = e.touches[0];
+            launchFirework(touch.clientX, touch.clientY);
+            checkModal();
+        });
+
+        function checkModal() {
+            clickCount++;
+            if(clickCount === 3) { // Chạm 3 lần sẽ hiện bảng lời chúc
+                setTimeout(() => {
+                    modal.style.display = 'block';
+                }, 500);
+            }
+        }
+
+        function closeModal(e) {
+            e.stopPropagation(); // Ngăn việc bấm đóng lại nổ pháo hoa tiếp
+            modal.style.display = 'none';
+            clickCount = 0;
+        }
+
+        // Pháo hoa tự động rơi nhẹ nhàng lúc đầu
+        setInterval(() => {
+            if (modal.style.display !== 'block') {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#00f2fe','#ffff00','#3333ff','#00cc00','ff0000','#ff66b2','#ff9933']
+                });
+                confetti({
+                    particleCount: 2,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#00f2fe']
+                });
+            }
+        }, 1500);
+    </script>
+</body>
+</html>
